@@ -2,11 +2,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
 
+import 'models/task.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
-  await Hive.openBox('tasks');
+  if (!Hive.isAdapterRegistered(taskStatusTypeId)) {
+    Hive.registerAdapter(TaskStatusAdapter());
+  }
+  if (!Hive.isAdapterRegistered(taskTypeId)) {
+    Hive.registerAdapter(TaskAdapter());
+  }
+
+  if (!Hive.isBoxOpen('tasks')) {
+    await Hive.openBox<Task>('tasks');
+  }
 
   runApp(const ProviderScope(child: TaskManagerApp()));
 }
