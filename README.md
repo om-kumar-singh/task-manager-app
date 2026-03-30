@@ -2,100 +2,113 @@
 
 > A real-world Flutter task management app with clean architecture, polished UI/UX, and reliable local persistence.
 
----
-
 ## Demo
 
-https://github.com/user-attachments/assets/ecc66f32-5b29-4de3-a4b4-f2ab58e15e55
+TODO: Add a demo video/link here (replace the placeholder).
 
----
+## Features (implemented)
 
-## Features
+### Task Management (Hive + Riverpod)
 
-### Task Management · Hive + Riverpod
-- Tasks are persisted locally in a Hive `tasks` box.
-- Full CRUD via `TaskService`.
-- `TaskNotifier` (Riverpod `StateNotifier`) manages loading state and prevents duplicate submissions.
-- **Draft persistence** on the Create/Edit form:
+- Task model persisted locally in a Hive `tasks` box.
+- Full CRUD via `TaskService` (create, read, update, delete).
+- Riverpod `TaskNotifier` manages loading state and prevents duplicate submissions.
+- Create/Edit form supports **draft persistence**:
   - Draft auto-saves when you leave the screen.
   - Draft restores when you reopen Create/Edit.
-  - Drafts live in a separate Hive `task_drafts` box.
+  - Drafts are stored in a separate Hive `task_drafts` box.
+- Delete UX:
+  - Swipe right on a task card to delete (with confirmation dialog).
+  - Snackbar feedback on deletion.
 
 ### Search, Filter & Highlight
-- Debounced (300ms) search by task title — case-insensitive.
-- Status filter: **All · ToDo · InProgress · Done**.
-- Matching text is highlighted inline using `RichText` / `TextSpan`.
+
+- Debounced (300ms) search by task title (case-insensitive).
+- Status filter: All, ToDo, InProgress, Done.
+- Matching title text is highlighted inline using `RichText` / `TextSpan`.
 
 ### Blocked Task UX
+
 If a task is blocked by another task that is not `Done`:
-- The card is greyed out and interaction is disabled.
+
+- The card is greyed out.
+- Interaction is disabled.
 - The card shows **Blocked by: \<Task Title\>**.
 
-### UI Polish
-- Rounded cards with soft shadows and clear visual hierarchy — title → date → status.
-- Subtle list animations and lightweight card transitions.
-- Loading indicators on the task list and the Save/Update button.
-- Friendly empty states:
-  - *No tasks yet. Create your first task!*
-  - *No tasks match your search.*
+## UI polish
 
----
+- Rounded cards with soft shadows and clear visual hierarchy (title → date → status).
+- Subtle list animations and lightweight card transitions.
+- Loading indicators on the task list and Save/Update button.
+- Friendly empty states:
+  - `No tasks yet. Create your first task!`
+  - `No tasks match your search`
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| UI Framework | Flutter · Material 3 |
-| State Management | Riverpod (StateNotifier) |
-| Local Persistence | Hive |
-| Date Formatting | intl |
-| ID Generation | uuid |
+- Flutter
+- Material 3
+- Riverpod (StateNotifier)
+- Hive (local persistence)
+- intl (date formatting)
+- uuid (Task id generation)
 
----
+## Quality & Validation
+
+- `flutter analyze` passes with no issues.
+- Automated tests cover CRUD, persistence, blocked dependency behavior, and draft save/load/clear.
 
 ## Getting Started
 
-**Prerequisites:** [Flutter SDK](https://docs.flutter.dev/get-started/install)
+1. Install Flutter SDK
+2. From this project directory, run:
 
-```bash
-# Install dependencies
-flutter pub get
+   - `flutter pub get`
+   - `flutter run -d windows`
 
-# Run on Windows
-flutter run -d windows
+## How to delete a task
 
-# Run on other platforms
-flutter run -d <device>
-```
-
----
+- Swipe the task card **to the right** → confirm delete → task is removed.
 
 ## Project Structure
 
-```
+The app is split into layers for clean separation of concerns:
+
+```txt
 lib/
-├── models/          # Task model + Hive annotations
-├── services/        # Box-backed CRUD and draft persistence
-├── providers/       # Riverpod notifiers and state
-├── screens/         # Full-screen UI (list, form)
-├── widgets/         # Reusable UI components
-└── utils/           # Helpers and utilities
+├── models/    # Task model + Hive annotations
+├── services/  # Box-backed CRUD and draft persistence
+├── providers/ # Riverpod notifiers and loading state
+├── screens/   # Full-screen UI (list, form)
+├── widgets/   # Reusable UI components
+└── utils/     # Shared UI helpers/constants
 ```
 
-### Key Files
+## Key files
 
-| File | Responsibility |
-|---|---|
-| `lib/models/task.dart` | Task model + Hive annotations |
-| `lib/models/task.g.dart` | Generated Hive `TypeAdapter` |
-| `lib/services/task_service.dart` | CRUD operations against the Hive box |
-| `lib/services/task_draft_service.dart` | Hive-backed draft persistence |
-| `lib/providers/task_provider.dart` | `TaskNotifier` + loading state |
-| `lib/screens/task_list_screen.dart` | List UI — search, filter, highlight, blocked logic |
-| `lib/screens/task_form_screen.dart` | Create/Edit form — validation + draft persistence |
+- `lib/models/task.dart`: Task model + Hive annotations.
+- `lib/models/task.g.dart`: Hive `TypeAdapter` implementations.
+- `lib/services/task_service.dart`: Box-backed CRUD for tasks.
+- `lib/services/task_draft_service.dart`: Hive-backed draft persistence.
+- `lib/providers/task_provider.dart`: `TaskNotifier` + loading state.
+- `lib/screens/task_list_screen.dart`: Task list UI with debounce search, filter, highlight, and blocked logic.
+- `lib/screens/task_form_screen.dart`: Create/Edit form with validation + draft persistence.
 
----
+## AI Usage Report
+
+This project was developed with assistance from AI tools to speed up implementation and improve quality. AI was used for:
+
+- Architecture & scaffolding (folder structure, Riverpod/Hive wiring)
+- UI implementation and polish (task list, form screen, search/filter, highlight, swipe-to-delete UX)
+- Bug fixing and code cleanup (analyzer warnings, API deprecations)
+- Test design (unit/widget tests validating CRUD, persistence, blocked dependency logic)
+
+All AI-generated changes were reviewed and validated with:
+
+- `flutter analyze`
+- `flutter test`
 
 ## License
 
-This project is open source. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
